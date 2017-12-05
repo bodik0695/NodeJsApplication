@@ -7,8 +7,6 @@ const myEmitter = new MyEmitter();
 const app = express();
 app.set("view engine", "hbs");
 app.listen(3000);
-let min = 1000;
-let max = 5000;
 let poem = ["У лукоморья дуб зелёный;",
              "Златая цепь на дубе том:",
              "И днём и ночью кот учёный",
@@ -46,17 +44,25 @@ let poem = ["У лукоморья дуб зелёный;",
 function getRandom(min,max,num){
     return Math.floor(Math.floor(Math.random() * (max - min + 1) + min) / num) * num;
 }
-app.get("/names", (req, res) => {
+app.get("/poem", (req, res) => {
     res.writeHead(200, {
         "Content-Type": "text/html; charset=utf-8"
     });
-    for(let i = 0; i < poem.length; i++){
+    let counter = 0;
+    function Timer(count){
+        let timeStart  = +new Date();
+        let temp = getRandom(1000, 5000, 1000)
         setTimeout(function() {
-            res.write(`<p style="margin-left: 40%">${poem[i]}</p>`);
-         }, getRandom(min, max, 1000));
-        min += 5000;
-        max += 5000;
-    }; 
+            res.write(`<p style="margin-left: 40%">${poem[count]}</p>`);
+            if(count<poem.length-1){
+                console.log(count);
+                Timer(++count);
+            }
+            let timeEnd  = +new Date();
+            console.log("passedTheTime: ", timeEnd-timeStart);
+        }, temp);
+    } 
+    Timer(counter); 
 });
 
 
